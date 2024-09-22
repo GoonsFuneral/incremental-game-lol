@@ -1,0 +1,63 @@
+import json
+import os
+
+# Sample Player class to hold the game state
+class Player:
+    def __init__(self, level=1, energy=100, experience=0, magic_unlocked=False, muscle_training_level=0, weight_training_level=0):
+        self.level = level
+        self.energy = energy
+        self.experience = experience
+        self.magic_unlocked = magic_unlocked
+        self.muscle_training_level = muscle_training_level
+        self.weight_training_level = weight_training_level
+
+    def save_progress(self, filename='progress.json'):
+        """Save player progress to a JSON file."""
+        data = {
+            'level': self.level,
+            'energy': self.energy,
+            'experience': self.experience,
+            'magic_unlocked': self.magic_unlocked,
+            'muscle_training_level': self.muscle_training_level,
+            'weight_training_level': self.weight_training_level
+        }
+        with open(filename, 'w') as f:
+            json.dump(data, f)
+        print("Progress saved successfully!")
+
+    def load_progress(self, filename='progress.json'):
+        """Load player progress from a JSON file."""
+        if os.path.exists(filename):
+            with open(filename, 'r') as f:
+                data = json.load(f)
+                self.level = data.get('level', 1)
+                self.energy = data.get('energy', 100)
+                self.experience = data.get('experience', 0)
+                self.magic_unlocked = data.get('magic_unlocked', False)
+                self.muscle_training_level = data.get('muscle_training_level', 0)
+                self.weight_training_level = data.get('weight_training_level', 0)
+            print("Progress loaded successfully!")
+        else:
+            print("No saved progress found, starting a new game.")
+
+# Example Game Loop
+def game_loop(player):
+    print(f"Player starts at level {player.level} with {player.energy} energy.")
+    # Simulating some actions in the game
+    player.level += 1
+    player.energy += 10
+    player.experience += 100
+    if player.level >= 100:
+        player.magic_unlocked = True
+    
+    # Save progress after some gameplay
+    player.save_progress()
+
+# When starting the game
+player = Player()  # New player object
+
+# Try to load previous progress if it exists
+player.load_progress()
+
+# Run the game loop (or whatever main logic you have)
+game_loop(player)
